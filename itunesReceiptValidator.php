@@ -45,7 +45,7 @@ class itunesReceiptValidator {
             throw new Exception('Invalid response data');
         }
 
-		return $decoded_response->receipt;
+        return $decoded_response->receipt;
     }
 
     private function encodeRequest() {
