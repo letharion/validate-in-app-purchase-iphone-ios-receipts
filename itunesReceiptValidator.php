@@ -1,4 +1,7 @@
 <?php
+
+namespace Letharion\Apple;
+
 class itunesReceiptValidator {
 
     const SANDBOX_URL    = 'https://sandbox.itunes.apple.com/verifyReceipt';
@@ -38,7 +41,7 @@ class itunesReceiptValidator {
         $decoded_response = $this->decodeResponse($response);
 
         if (!isset($decoded_response->status) || $decoded_response->status != 0) {
-            throw new Exception('Invalid receipt. Status code: ' . (!empty($decoded_response->status) ? $decoded_response->status : 'N/A'));
+            throw new \Exception('Invalid receipt. Status code: ' . (!empty($decoded_response->status) ? $decoded_response->status : 'N/A'));
         }
 
         if (!is_object($decoded_response)) {

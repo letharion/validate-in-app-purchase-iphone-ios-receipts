@@ -2,6 +2,8 @@
 
 include __DIR__ . '/../itunesReceiptValidator.php';
 
+use Letharion\Apple\itunesReceiptValidator;
+
 if (isset($_GET['receipt'])) {
     $receipt  = $_GET['receipt'];
 }
