@@ -1,6 +1,6 @@
 <?php
 
-include __DIR__ . '/../itunesReceiptValidator.php';
+include __DIR__ . '/../src/itunesReceiptValidator.php';
 
 use Letharion\Apple\itunesReceiptValidator;
 

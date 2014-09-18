@@ -1,0 +1,24 @@
+{
+    "name": "letharion/validate-apple-receipt",
+    "description": "Helps managing run-time code updates.",
+    "require": {
+      "php": ">=5.3.0"
+    },
+    "authors": [
+        {
+            "name": "Chris Maddern",
+            "email": "chrism@animoto.com"
+        },
+        {
+            "name": "Claes 'Letharion' Gyllensvärd",
+            "email": "letharion@gmail.com"
+        },
+        {
+            "name": "Stefan Lingler",
+            "email": "s.lingler@kopal.at"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Letharion": "src" }
+    }
+}
