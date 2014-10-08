@@ -7,11 +7,27 @@ class itunesReceiptValidator {
     const SANDBOX_URL    = 'https://sandbox.itunes.apple.com/verifyReceipt';
     const PRODUCTION_URL = 'https://buy.itunes.apple.com/verifyReceipt';
 
-    function __construct($endpoint, $receipt = NULL) {
+    /**
+     * @param string $endpoint
+     *   Which endpoint to send the request to.
+     *   Expected to be either sandbox or production, see constants in this class.
+     * @param string $receipt
+     *   The raw receipt data from iTunes that will be passed to iTunes for
+     *   validation.
+     * @param string $password
+     *   A secret shared with iTunes.
+     *   Only used for iOS 6 style transaction receipts for auto-renewable
+     *   subscriptions. Your app’s shared secret (a hexadecimal string).
+     *   @see https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html
+     */
+    function __construct($endpoint, $receipt = NULL, $password = NULL) {
         $this->setEndPoint($endpoint);
 
         if ($receipt) {
             $this->setReceipt($receipt);
+        }
+        if ($password) {
+            $this->setPassword($password);
         }
     }
 
@@ -20,11 +36,15 @@ class itunesReceiptValidator {
     }
 
     function setReceipt($receipt) {
-        if (strpos($receipt, '{') !== false) {
-            $this->receipt = base64_encode($receipt);
-        } else {
-            $this->receipt = $receipt;
-        }
+        $this->receipt = $receipt;
+    }
+
+    function getPassword() {
+        return $this->password;
+    }
+
+    function setPassword($password) {
+        $this->password = $password;
     }
 
     function getEndpoint() {
@@ -52,7 +72,15 @@ class itunesReceiptValidator {
     }
 
     private function encodeRequest() {
-        return json_encode(array('receipt-data' => $this->getReceipt()));
+      $receipt_data = array(
+        'receipt-data' => $this->getReceipt(),
+      );
+
+      if (!empty($this->password)) {
+        $receipt_data['password'] = $this->password;
+      }
+
+      return json_encode($receipt_data);
     }
 
     private function decodeResponse($response) {
