@@ -1,0 +1,8 @@
+<phpunit>
+  <bigup>you got 99 problems but the tests ain't one</bigup>
+  <testsuites>
+    <testsuite>
+      <directory suffix=".php">./tests/</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
