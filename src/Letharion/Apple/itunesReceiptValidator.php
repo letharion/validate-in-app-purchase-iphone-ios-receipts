@@ -2,6 +2,8 @@
 
 namespace Letharion\Apple;
 
+use Letharion\Apple\Exceptions\ReceiptNotBase64EncodedException;
+
 class itunesReceiptValidator {
 
     const SANDBOX_URL    = 'https://sandbox.itunes.apple.com/verifyReceipt';
@@ -31,6 +33,12 @@ class itunesReceiptValidator {
         }
     }
 
+    function validate() {
+      $decoded = base64_decode($this->getReceipt(), TRUE);
+      if ($decoded === FALSE) {
+        throw new ReceiptNotBase64EncodedException();
+      }
+    }
     function getReceipt() {
         return $this->receipt;
     }
@@ -60,15 +68,11 @@ class itunesReceiptValidator {
 
         $decoded_response = $this->decodeResponse($response);
 
-        if (!isset($decoded_response->status) || $decoded_response->status != 0) {
-            throw new \Exception('Invalid receipt. Status code: ' . (!empty($decoded_response->status) ? $decoded_response->status : 'N/A'));
-        }
-
         if (!is_object($decoded_response)) {
-            throw new Exception('Invalid response data');
+            throw new \Exception('Invalid response data' . print_r($decoded_response, TRUE));
         }
 
-        return $decoded_response->receipt;
+        return $decoded_response;
     }
 
     private function encodeRequest() {
@@ -80,7 +84,9 @@ class itunesReceiptValidator {
         $receipt_data['password'] = $this->password;
       }
 
-      return json_encode($receipt_data);
+      $encoded = json_encode($receipt_data);
+
+      return $encoded;
     }
 
     private function decodeResponse($response) {
@@ -101,7 +107,7 @@ class itunesReceiptValidator {
         curl_close($ch);
 
         if ($errno != 0) {
-            throw new Exception($errmsg, $errno);
+            throw new \Exception($errmsg, $errno);
         }
 
         return $response;
