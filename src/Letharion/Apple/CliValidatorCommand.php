@@ -26,7 +26,7 @@ class CliValidatorCommand extends Command
       ->addArgument(
         'endpoint',
         InputArgument::OPTIONAL,
-        'Which endpoint to send the request to. Defaults to production.',
+        'Which endpoint to send the request to.',
         'production'
       )
       ->addArgument(
