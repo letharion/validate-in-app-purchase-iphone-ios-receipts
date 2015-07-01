@@ -37,6 +37,7 @@ class CliValidatorCommand extends Command
       )
       ;
   }
+
   protected function execute(InputInterface $input, OutputInterface $output)
   {
     $receipts = $input->getArgument('receipt');
@@ -63,7 +64,8 @@ class CliValidatorCommand extends Command
       }
     }
 
-    $endpoint = 'production' ? itunesReceiptValidator::PRODUCTION_URL : itunesReceiptValidator::SANDBOX_URL;
+
+    $endpoint = ($endpoint === 'production') ? itunesReceiptValidator::PRODUCTION_URL : itunesReceiptValidator::SANDBOX_URL;
 
     $rv = new itunesReceiptValidator($endpoint, NULL, $password);
     foreach ($receipts as $receipt) {
