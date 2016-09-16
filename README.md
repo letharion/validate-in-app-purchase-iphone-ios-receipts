@@ -1,15 +1,21 @@
 In App Purchase Receipt Validator - PHP
 =======================================
 
-Host this on any box which is running PHP and has direct outbound web access and it will be able to validate iOS IAP receipts for you (Sandbox or Production environment configurable).
+This code allows for server-side validation of iTunes receipts.
 
-Feel free to use this code in anything you make, with the standard disclaimer that if it doesn't work / blows up the universe, you're on your own.
+For single use, such as debugging and testing, it can be called from CLI:
 
-Alternatively, the latest version is hosted at: http://www.chrismaddern.com/validate-itunes-receipt/
+    php ./bin/itunes.php validate @my_receipt.txt "production" @password.txt
 
-This points to production.
+Where "my_receipt.txt" is a plain text with a iTunes receipt as a single line.
+Production can be switched for Sandbox as necessary to send the receipt to
+the two environments.
 
-There is a Sandbox version embedded here:
-http://www.chrismaddern.com/validate-app-store-iap-receipt-codes-online-tool/
+and as part of a service:
 
-The PHP is rough, but it works - any forks / pull requests are more than welcome!!
+    <?php
+    $rv = new itunesReceiptValidator($endpoint, $receipt, $password);
+    $rv->validateReceipt();
+
+By calling setReceipt() rather than passing $receipt in, one can easily batch
+process many receipts as well.
