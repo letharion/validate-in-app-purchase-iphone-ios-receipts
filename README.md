@@ -15,4 +15,5 @@ the two environments.
 Can be called as part of a service:
 
     <?php
+    $endpoint = itunesReceiptValidator::PRODUCTION_URL;
     (new itunesReceiptValidator($endpoint, $password))->validateReceipt($receipt)
