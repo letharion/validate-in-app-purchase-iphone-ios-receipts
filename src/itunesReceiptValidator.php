@@ -22,29 +22,9 @@ class itunesReceiptValidator {
      *   subscriptions. Your app’s shared secret (a hexadecimal string).
      *   @see https://developer.apple.com/library/ios/releasenotes/General/ValidateAppStoreReceipt/Chapters/ValidateRemotely.html
      */
-    function __construct($endpoint, $receipt = NULL, $password = NULL) {
+    function __construct($endpoint, $password = NULL) {
         $this->setEndPoint($endpoint);
-
-        if ($receipt) {
-            $this->setReceipt($receipt);
-        }
-        if ($password) {
-            $this->setPassword($password);
-        }
-    }
-
-    function validate() {
-      $decoded = base64_decode($this->getReceipt(), TRUE);
-      if ($decoded === FALSE) {
-        throw new ReceiptNotBase64EncodedException();
-      }
-    }
-    function getReceipt() {
-        return $this->receipt;
-    }
-
-    function setReceipt($receipt) {
-        $this->receipt = $receipt;
+        $this->setPassword($password);
     }
 
     function getPassword() {
@@ -63,8 +43,8 @@ class itunesReceiptValidator {
         $this->endpoint = $endpoint;
     }
 
-    function validateReceipt() {
-        $response = $this->makeRequest();
+    function validateReceipt($receipt) {
+        $response = $this->makeRequest($receipt);
 
         $decoded_response = $this->decodeResponse($response);
 
@@ -75,9 +55,9 @@ class itunesReceiptValidator {
         return $decoded_response;
     }
 
-    private function encodeRequest() {
+    private function encodeRequest($receipt) {
       $receipt_data = array(
-        'receipt-data' => $this->getReceipt(),
+        'receipt-data' => $receipt,
       );
 
       if (!empty($this->password)) {
@@ -93,13 +73,13 @@ class itunesReceiptValidator {
         return json_decode($response);
     }
 
-    private function makeRequest() {
+    private function makeRequest($receipt) {
         $ch = curl_init($this->endpoint);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeRequest());
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeRequest($receipt));
 
         $response = curl_exec($ch);
         $errno    = curl_errno($ch);

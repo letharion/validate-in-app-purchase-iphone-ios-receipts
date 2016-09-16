@@ -9,7 +9,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Letharion\Apple\itunesReceiptValidator;
-use Letharion\Apple\ReceiptNotBase64EncodedException;
 
 class CliValidatorCommand extends Command
 {
@@ -58,19 +57,18 @@ class CliValidatorCommand extends Command
 
     if ($password !== NULL && $password[0] === '@') {
       $password = trim(file_get_contents(substr($password, 1)));
-      if ($password === FALSE) {
+      if ($password === "") {
         $output->writeln("Unable to read password from file.");
         return;
       }
     }
 
-
     $endpoint = ($endpoint === 'production') ? itunesReceiptValidator::PRODUCTION_URL : itunesReceiptValidator::SANDBOX_URL;
 
-    $rv = new itunesReceiptValidator($endpoint, NULL, $password);
-    foreach ($receipts as $receipt) {
-      $rv->setReceipt(trim($receipt));
-      $output->writeln(json_encode($rv->validateReceipt()));
-    }
+    $rv = new itunesReceiptValidator($endpoint, $password);
+    $results = array_map(function ($receipt) use ($rv) {
+      return $rv->validateReceipt($receipt);
+    }, $receipts);
+    $output->writeln(json_encode($results));
   }
 }
