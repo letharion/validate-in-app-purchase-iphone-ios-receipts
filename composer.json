@@ -23,6 +23,6 @@
         }
     ],
     "autoload": {
-        "psr-0": { "Letharion": "src" }
+        "psr-4": { "Letharion\\Apple\\": "src" }
     }
 }
