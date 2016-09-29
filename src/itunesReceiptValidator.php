@@ -75,8 +75,6 @@ class itunesReceiptValidator {
 
     private function makeRequest($receipt) {
         $ch = curl_init($this->endpoint);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->encodeRequest($receipt));
